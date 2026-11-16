@@ -1,3 +1,5 @@
+**English** | [Português](README.pt-BR.md)
+
 # Margin — Learn with evidence
 
 A private, source-first living study guide. Turn notes into review drafts, compare each draft with its original evidence, and build a library you can actually trust.
