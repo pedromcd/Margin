@@ -4,6 +4,25 @@
 
 A private, source-first living study guide. Turn notes into review drafts, compare each draft with its original evidence, and build a library you can actually trust.
 
+**Stack:** React 19 · Vite · Supabase (Auth + PostgreSQL with row-level security) · Vercel serverless functions · OpenAI · Node test runner · GitHub Actions
+
+## Why I built it
+
+AI tools are great at turning notes into flashcards and summaries, but the output *sounds* right even when it is not, and there is no easy way to check where each claim came from. For studying, that is a problem: memorizing a hallucination is worse than not studying at all.
+
+Margin flips the default. **Every card must point to the exact passage of the notes it came from**, and **nothing enters the study library until a person approves it**. The AI only drafts; the student stays in charge.
+
+## Highlights
+
+- **Citation check on the server.** The model must return, for each draft, an exact quote from the notes. The API rejects the whole response if any quote is not found verbatim in the source, so a draft can never point to evidence that does not exist.
+- **Human-in-the-loop by design.** AI output is labeled as interpretation and stays *pending* until it is approved, edited, merged, or discarded.
+- **Prompt-injection aware.** The notes are sent as untrusted data, and the system prompt tells the model to ignore any instructions inside them and to use no outside knowledge.
+- **Free extractive mode.** Drafts can be created without AI, copying source sentences exactly, so the app works with no API key and sends nothing to a third party.
+- **Per-user data isolation in the database.** Supabase row-level security restricts every notebook to `auth.uid()`, independent of the interface.
+- **Abuse protection.** AI requests require a valid session token and are limited to ten generations per account per hour through an atomic database counter.
+- **Spaced repetition.** Reviews are rescheduled at 1, 2, 4, 8, 16, and up to 30 days.
+- **Tested and checked in CI.** Domain tests (grounding, approval state, scheduling) and the production build run on every push.
+
 ## The workflow
 
 1. Paste notes or import a UTF-8 `.txt` or `.md` file (up to 30,000 characters).

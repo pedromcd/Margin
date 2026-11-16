@@ -4,6 +4,25 @@
 
 Um guia de estudos vivo, privado e orientado à fonte. Transforme anotações em rascunhos de revisão, compare cada rascunho com a evidência original e construa uma biblioteca em que você realmente pode confiar.
 
+**Stack:** React 19 · Vite · Supabase (Auth + PostgreSQL com row-level security) · funções serverless na Vercel · OpenAI · test runner do Node · GitHub Actions
+
+## Por que eu criei
+
+Ferramentas de IA são ótimas para transformar anotações em flashcards e resumos, mas o resultado *parece* certo mesmo quando não está, e não há uma forma fácil de conferir de onde veio cada afirmação. Para estudar, isso é um problema: decorar uma alucinação é pior do que não estudar.
+
+O Margin inverte o padrão. **Todo card precisa apontar para o trecho exato das anotações de onde veio**, e **nada entra na biblioteca de estudo sem a aprovação de uma pessoa**. A IA só faz o rascunho; quem decide é o estudante.
+
+## Destaques
+
+- **Verificação de citações no servidor.** Para cada rascunho, o modelo precisa devolver uma citação exata das anotações. A API rejeita a resposta inteira se alguma citação não for encontrada palavra por palavra na fonte, então um rascunho nunca aponta para uma evidência que não existe.
+- **Humano no circuito desde o projeto.** A saída da IA é identificada como interpretação e fica *pendente* até ser aprovada, editada, mesclada ou descartada.
+- **Atenção a prompt injection.** As anotações são enviadas como dados não confiáveis, e o prompt de sistema manda o modelo ignorar qualquer instrução dentro delas e não usar conhecimento externo.
+- **Modo extrativo gratuito.** É possível criar rascunhos sem IA, copiando as frases da fonte exatamente como estão, então o app funciona sem chave de API e sem enviar nada a terceiros.
+- **Isolamento dos dados por usuário no banco.** O row-level security do Supabase restringe cada caderno ao `auth.uid()`, independentemente da interface.
+- **Proteção contra abuso.** Requisições de IA exigem um token de sessão válido e são limitadas a dez gerações por conta por hora, com um contador atômico no banco.
+- **Repetição espaçada.** As revisões são reagendadas para 1, 2, 4, 8, 16 e até 30 dias.
+- **Testado e verificado na CI.** Os testes de domínio (embasamento, estado de aprovação, agendamento) e o build de produção rodam a cada push.
+
 ## O fluxo
 
 1. Cole anotações ou importe um arquivo `.txt` ou `.md` em UTF-8 (até 30.000 caracteres).
